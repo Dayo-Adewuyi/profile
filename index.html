@@ -165,6 +165,12 @@ main{max-width:1100px; margin:0 auto; padding:28px 18px 0; display:grid; gap:28p
 .tag{font-family:var(--font-ui); font-size:13px; padding:0 8px; border:2px solid var(--ink); background:var(--paper)}
 .tag.draft{background:var(--red); color:#fff}
 
+/* paper clips holding cards */
+.proj,.post{position:relative}
+.clip{position:absolute; top:-22px; right:26px; width:20px; height:52px; pointer-events:none; transform:rotate(7deg)}
+.clip.l{right:auto; left:30px; transform:rotate(-9deg)}
+.clip path{fill:none; stroke-linecap:round; stroke-linejoin:round}
+
 /* reader */
 .reader{
   position:fixed; inset:0; z-index:40; background:rgba(29,27,46,.45);
@@ -857,6 +863,16 @@ RETURNING key;</code></pre>
   postsEl.querySelectorAll('[data-post]').forEach(a=>{
     a.addEventListener('click', e=>{ e.preventDefault(); lastTrigger = a; openPost(a.dataset.post); });
   });
+  // Plain paper clips holding the project and blog cards (decorative)
+  const CLIP = '<svg class="clip" viewBox="0 0 26 62" aria-hidden="true">' +
+    ['<path d="M10 16V44a4 4 0 0 0 8 0V9a7 7 0 0 0-14 0v38a9 9 0 0 0 18 0V21" stroke="#1d1b2e" stroke-width="4.6"/>',
+     '<path d="M10 16V44a4 4 0 0 0 8 0V9a7 7 0 0 0-14 0v38a9 9 0 0 0 18 0V21" stroke="#c9cdd6" stroke-width="2.4"/>',
+     '<path d="M4 12v30" stroke="#fff" stroke-width=".9" opacity=".9"/>'].join('') + '</svg>';
+  document.querySelectorAll('.proj, .post').forEach((card, i)=>{
+    card.insertAdjacentHTML('afterbegin', CLIP);
+    if(i % 2) card.querySelector('.clip').classList.add('l');
+  });
+
   function openPost(slug){
     const p = POSTS.find(x=>x.slug===slug); if(!p) return;
     currentPost = p;
